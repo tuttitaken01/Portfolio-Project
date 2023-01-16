@@ -1,15 +1,12 @@
-const db = require("./db/connection.js");
+const { selCategories } = require("./models.js");
 
 exports.serverStatus = (req, res) => {
     res.status(200).send({ msg: "Server doing fine" });
 }
 
-/*exports.getCatgories = (req, res) => {
-    return db.query("SELECT * FROM categories;")
-    .then(result => {
-        return result.rows;
-    })
+exports.getCategories = (req, res) => {
+    selCategories()
     .then((categories) => {
         res.status(200).send({ categories });
     })
-} */
+}

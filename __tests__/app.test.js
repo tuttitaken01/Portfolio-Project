@@ -4,9 +4,9 @@ const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
 
-//beforeEach(() => seed(data));
+beforeEach(() => seed(data));
 
-//afterAll(() => db.end());
+afterAll(() => db.end());
 
 describe("0.serverStatus", () => {
     describe("GET /api", () => {
@@ -22,7 +22,7 @@ describe("0.serverStatus", () => {
         });
     });
 })
-/*
+
 describe("1.getCategories", () => {
     describe("GET /api/categories", () => {
         test("returns an array of objects", () => {
@@ -32,8 +32,13 @@ describe("1.getCategories", () => {
             .then((res) => {
                 let categories = res.body.categories;
                 expect(Array.isArray(categories)).toBe(true);
+                categories.forEach(cat => {
+                    expect(cat.hasOwnProperty("slug")).toBe(true);
+                    expect(cat.hasOwnProperty("description")).toBe(true);
+                })
+                })
             })
         })
     })
-})
-*/
+
+

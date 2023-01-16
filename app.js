@@ -8,7 +8,7 @@ const {
 } = require('./controllers.js')
 
 app.get('/api', serverStatus);
-//app.get('/api/categories', getCategories);
+app.get('/api/categories', getCategories);
 
 /*const { PORT = 9090 } = process.env;
 
