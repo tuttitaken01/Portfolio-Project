@@ -5,7 +5,8 @@ app.use(express.json());
 const {
     serverStatus,
     getCategories,
-    getReviews
+    getReviews,
+    getReviewById
 } = require('./controllers/controllers.js')
 
 const {
@@ -16,6 +17,7 @@ const {
 app.get('/api', serverStatus);
 app.get('/api/categories', getCategories);
 app.get('/api/reviews', getReviews);
+app.get('/api/reviews/:review_id', getReviewById);
 
 
 // ERROR HANDLING FUNCTIONS 
