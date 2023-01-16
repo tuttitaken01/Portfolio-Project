@@ -5,11 +5,17 @@ app.use(express.json());
 const {
     serverStatus,
     getCategories
-} = require('./controllers.js')
+} = require('./controllers/controllers.js')
+
+const {
+    standardErrorHandler
+} = require("./controllers/error-controller.js");
 
 app.get('/api', serverStatus);
 app.get('/api/categories', getCategories);
 
+
+app.use(standardErrorHandler);
 /*const { PORT = 9090 } = process.env;
 
 app.listen(PORT, err => {

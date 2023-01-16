@@ -16,7 +16,7 @@ describe("0.serverStatus", () => {
             .expect(200)
             .then(({ body }) => {
                 expect(body).toEqual({
-                    msg: "Server doing fine",
+                    msg: "Server doing fine"
                 });
             });
         });
@@ -25,20 +25,34 @@ describe("0.serverStatus", () => {
 
 describe("1.getCategories", () => {
     describe("GET /api/categories", () => {
-        test("returns an array of objects", () => {
+        test("returns an array of objects of length 4", () => {
             return request(app)
             .get("/api/categories")
             .expect(200)
             .then((res) => {
                 let categories = res.body.categories;
                 expect(Array.isArray(categories)).toBe(true);
+                expect(categories).toHaveLength(4)
+            });
+        })
+        test("each object has SLUG and DESCRIPTION properties", () => {
+            return request(app)
+            .get("/api/categories")
+            .expect(200)
+            .then(res => {
+                categories = res.body.categories;
                 categories.forEach(cat => {
                     expect(cat.hasOwnProperty("slug")).toBe(true);
                     expect(cat.hasOwnProperty("description")).toBe(true);
                 })
-                })
             })
         })
+        test.only("returns a 404 status code if path is not valid", () => {
+            return request(app)
+            .get("/api/category")
+            .expect(404)
+        })
     })
+})
 
 
