@@ -4,11 +4,9 @@ const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
 
-beforeEach(() => {
-    return seed(data);
-});
+//beforeEach(() => seed(data));
 
-afterAll(() => db.end());
+//afterAll(() => db.end());
 
 describe("0.serverStatus", () => {
     describe("GET /api", () => {

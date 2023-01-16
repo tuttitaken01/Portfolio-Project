@@ -10,11 +10,11 @@ const {
 app.get('/api', serverStatus);
 //app.get('/api/categories', getCategories);
 
-const { PORT = 9090 } = process.env;
+/*const { PORT = 9090 } = process.env;
 
 app.listen(PORT, err => {
     if (err) throw err;
     console.log(`Listening on ${PORT}`);
 })
-
+*/
 module.exports = app;
