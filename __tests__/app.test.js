@@ -105,3 +105,41 @@ describe("2.getReviews", () => {
     })
 })
 
+describe("3.getReviewById", () => {
+    describe("GET /api/reviews/:id", () => {
+        test("returns a single review", () => {
+            return request(app)
+            .get("/api/reviews/3")
+            .expect(200)
+            .then(res => {
+                let review = res.body.review;
+                console.log(review);
+                expect(typeof(review)).toBe("object");
+                expect(review).toMatchObject({
+                    review_id: 3,
+                    title: 'Ultimate Werewolf',
+                    designer: 'Akihisa Okui',
+                    owner: 'bainesface',
+                    review_img_url:
+                      'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700',
+                    review_body: "We couldn't find the werewolf!",
+                    category: 'social deduction',
+                    created_at: "2021-01-18T09:01:41.251Z",
+                    votes: 5
+                  })
+            })
+        })
+        test("returns a 404 error if input number does not exist", () => {
+            return request(app)
+            .get("/api/reviews/150")
+            .expect(404)
+        })
+        test("returns a 400 error if input is not number type", () => {
+            return request(app)
+            .get("/api/reviews/abc")
+            .expect(400)
+        })
+    }) 
+})
+
+
