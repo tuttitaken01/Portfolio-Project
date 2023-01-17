@@ -12,7 +12,8 @@ const {
 
 const {
     standardErrorHandler,
-    customErrorHandler
+    customErrorHandler,
+    notFoundHandler
 } = require("./controllers/error-controller.js");
 
 // ENDPOINTS
@@ -25,6 +26,7 @@ app.get('/api/reviews/:id/comments', getCommentsById)
 
 // ERROR HANDLING FUNCTIONS 
 app.use(standardErrorHandler);
+app.use(notFoundHandler);
 app.use(customErrorHandler);
 
 

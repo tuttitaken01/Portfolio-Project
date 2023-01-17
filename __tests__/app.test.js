@@ -136,7 +136,7 @@ describe("3.getReviewById", () => {
     }) 
 })
 
-describe.only("4.getCommentsById", () => {
+describe("4.getCommentsById", () => {
     describe("GET /api/reviews/:id/comments", () => {
         test("returns an array of comments", () => {
             return request(app)
