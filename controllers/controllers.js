@@ -1,7 +1,8 @@
 const { 
     selCategories,
     selReviews,
-    fetchReview
+    fetchReview,
+    fetchComments
 } = require("../models.js");
 
 exports.serverStatus = (req, res) => {
@@ -37,7 +38,22 @@ exports.getReviewById = (req, res, next) => {
         res.status(200).send({ review: reviewData });
     })
     .catch(err => {
-        //console.log(err);
+        console.log(err);
+        next(err);
+    })
+}
+
+exports.getCommentsById = (req, res, next) => {
+    const { id } = req.params;
+    return fetchReview(id)
+    .then(() => {
+        return fetchComments(id);
+    })
+    .then((comments) => {
+        res.status(200).send({ comments });
+    })
+    .catch(err => {
+        console.log(err);
         next(err);
     })
 }

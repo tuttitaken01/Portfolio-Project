@@ -108,7 +108,6 @@ describe("3.getReviewById", () => {
             .expect(200)
             .then(res => {
                 let review = res.body.review;
-                console.log(review);
                 expect(typeof(review)).toBe("object");
                 expect(review).toMatchObject({
                     review_id: 3,
@@ -135,6 +134,40 @@ describe("3.getReviewById", () => {
             .expect(400)
         })
     }) 
+})
+
+describe.only("4.getCommentsById", () => {
+    describe("GET /api/reviews/:id/comments", () => {
+        test("returns an array of comments", () => {
+            return request(app)
+            .get("/api/reviews/2/comments")
+            .expect(200)
+            .then(res => {
+                let comments = res.body.comments;
+                expect(Array.isArray(comments)).toBe(true);
+                expect(comments).toHaveLength(3);
+            })
+        })
+        test("returns an empty array if id is valid but no comments are found", () => {
+            return request(app)
+            .get("/api/reviews/1/comments")
+            .expect(200)
+            .then(res => {
+                comments = res.body.comments;
+                expect(comments).toHaveLength(0);
+            })
+        })
+        test("returns a 404 error if input is not found", () => {
+            return request(app)
+            .get("/api/reviews/47/comments")
+            .expect(404)
+        })
+        test("returns a 400 error if input is not number type", () => {
+            return request(app)
+            .get("/api/reviews/dj/comments")
+            .expect(400)
+        })
+    })
 })
 
 
