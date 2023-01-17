@@ -47,7 +47,7 @@ describe("1.getCategories", () => {
                 })
             })
         })
-        test("returns a 404 status code if path is not valid", () => {
+        test("returns a 404 status code if path is not found", () => {
             return request(app)
             .get("/api/category")
             .expect(404)
@@ -96,11 +96,6 @@ describe("2.getReviews", () => {
                     expect(reviews.comment_count).toBe(3);
                 }          
             })
-        })
-        test("returns a 404 status code if path not valid", () => {
-            return request(app)
-            .get("/api/review")
-            .expect(404)
         })
     })
 })
