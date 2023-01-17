@@ -2,8 +2,15 @@ const {
     selCategories,
     selReviews,
     fetchReview,
-    fetchComments
+    fetchComments,
+    addComment
 } = require("../models.js");
+
+const {
+    reviewID,
+    validateKeys,
+    userExists
+} = require("./check-funcs.js")
 
 exports.serverStatus = (req, res) => {
     res.status(200).send({ msg: "Server doing fine" });
@@ -15,7 +22,6 @@ exports.getCategories = (req, res, next) => {
         res.status(200).send({ categories });
     })
     .catch(err => {
-        console.log(err);
         next(err);
     })
 }
@@ -26,7 +32,6 @@ exports.getReviews = (req, res, next) => {
         res.status(200).send({ reviews });
     })
     .catch(err => {
-        console.log(err);
         next(err);
     })
 }
@@ -38,7 +43,6 @@ exports.getReviewById = (req, res, next) => {
         res.status(200).send({ review: reviewData });
     })
     .catch(err => {
-        console.log(err);
         next(err);
     })
 }
@@ -53,7 +57,33 @@ exports.getCommentsById = (req, res, next) => {
         res.status(200).send({ comments });
     })
     .catch(err => {
-        console.log(err);
         next(err);
     })
+}
+
+exports.postCommentById = (req, res, next) => {
+    let id = req.params["id"];
+    let { username, body } = req.body;
+    if (validateKeys(req.body, ["username", "body"])) {
+        reviewID(id)
+        .then(idTrue => {
+            if (idTrue === false) {
+                return Promise.reject({ status: 400, msg: "Bad Request" });
+            }
+        })
+        .then(() => {
+            return userExists(username);
+        })
+        .then(() => {
+            return addComment(id, username, body);
+        })
+        .then((comment) => {
+            res.status(201).send({ comment });
+        })
+        .catch(err => {
+            next(err);
+        })
+    } else {
+        throw { status: 400, msg: "Bad Request" };
+    }
 }

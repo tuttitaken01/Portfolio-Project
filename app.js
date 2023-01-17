@@ -7,12 +7,14 @@ const {
     getCategories,
     getReviews,
     getReviewById,
-    getCommentsById
+    getCommentsById,
+    postCommentById
 } = require('./controllers/controllers.js')
 
 const {
     standardErrorHandler,
-    customErrorHandler
+    customErrorHandler,
+    notFoundHandler
 } = require("./controllers/error-controller.js");
 
 // ENDPOINTS
@@ -20,11 +22,13 @@ app.get('/api', serverStatus);
 app.get('/api/categories', getCategories);
 app.get('/api/reviews', getReviews);
 app.get('/api/reviews/:id', getReviewById);
-app.get('/api/reviews/:id/comments', getCommentsById)
+app.get('/api/reviews/:id/comments', getCommentsById);
+app.post('/api/reviews/:id/comments', postCommentById);
 
 
 // ERROR HANDLING FUNCTIONS 
 app.use(standardErrorHandler);
+app.use(notFoundHandler);
 app.use(customErrorHandler);
 
 
