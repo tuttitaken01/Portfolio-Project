@@ -7,7 +7,7 @@ exports.standardErrorHandler = (err, req, res, next) => {
 }
 
 exports.notFoundHandler = (req, res, next) => {
-    res.status(404).send({ message: "Not Found" });
+    res.status(404).send({ msg: "Not Found" });
 }
 
 exports.customErrorHandler = (err, req, res, next) => {

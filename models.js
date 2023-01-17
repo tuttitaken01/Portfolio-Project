@@ -5,7 +5,6 @@ exports.selCategories = (req,res) => {
     SELECT * 
     FROM categories;`)
     .then(result => {
-        //console.log(result.rows);
         return result.rows;
     });
 }
@@ -20,7 +19,6 @@ exports.selReviews = () => {
     GROUP BY reviews.review_id
     ORDER BY created_at DESC;`)
     .then(result => {
-        //console.log(result.rows);
         return result.rows;
     })
 }
@@ -37,10 +35,9 @@ exports.fetchReview = (id) => {
         if(result.rows.length === 0) {
             return Promise.reject({
                 status: 404,
-                message: "Not Found"
+                msg: "Not Found"
             })
         }
-        //console.log(result.rows[0]);
         return result.rows[0];
     })
 } 
@@ -51,7 +48,6 @@ exports.fetchComments = (id) => {
     FROM comments
     WHERE review_id=$1;`, [id])
     .then(result => {
-        //console.log(result.rows);
         return result.rows;
     })
 }
@@ -62,6 +58,16 @@ exports.addComment = (id, username, body) => {
     INSERT INTO comments (body, votes, author, review_id, created_at)
     VALUES ($1, $2, $3, $4, $5)
     RETURNING *;`, [body, 0, username, id, createdAt])
+    .then(res => {
+        return res.rows;
+    })
+}
+
+exports.selUsers = (username) => {
+    return db.query(`
+    SELECT *
+    FROM users
+    WHERE username=$1;`, [username])
     .then(res => {
         return res.rows;
     })

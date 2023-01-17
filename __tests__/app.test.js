@@ -51,6 +51,9 @@ describe("1.getCategories", () => {
             return request(app)
             .get("/api/category")
             .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })
         })
     })
 })
@@ -127,11 +130,17 @@ describe("3.getReviewById", () => {
             return request(app)
             .get("/api/reviews/150")
             .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })
         })
         test("returns a 400 error if input is not number type", () => {
             return request(app)
             .get("/api/reviews/abc")
             .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
         })
     }) 
 })
@@ -161,11 +170,17 @@ describe("4.getCommentsById", () => {
             return request(app)
             .get("/api/reviews/47/comments")
             .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })
         })
         test("returns a 400 error if input is not number type", () => {
             return request(app)
             .get("/api/reviews/dj/comments")
             .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
         })
     })
 })
@@ -199,11 +214,41 @@ describe("5.postCommentById", () => {
                 });
             })
         })
-        test("returns a 400 Bad Request status if any query key/parameter is invalid or missing", () => {
+        test("returns a 400 error if a different format input is given. accepted => {username: '', body:'') ", () => {
             return request(app)
             .post("/api/reviews/1/comments")
             .send({ username: "X" })
             .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
+        test("returns a 400 error for an invalid review_id - wrong format", () => {
+            return request(app)
+            .post("/api/reviews/abc/comments")
+            .send({ username: "dav3rid", body: "Testing body" })
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
+        test("returns a 400 error for an invalid review_id - out of range", () => {
+            return request(app)
+            .post("/api/reviews/47/comments")
+            .send({ username: "dav3rid", body: "Testing body" })
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
+        test("returns a 400 error is user does not exist", () => {
+            return request(app)
+            .post("/api/reviews/1/comments")
+            .send({ username: "davtrid", body: "Testing body" })
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
         })
     })
 })
