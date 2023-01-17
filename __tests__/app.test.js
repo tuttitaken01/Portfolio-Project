@@ -170,4 +170,42 @@ describe("4.getCommentsById", () => {
     })
 })
 
+describe("5.postCommentById", () => {
+    describe("POST /api/reviews/:id/comments", () => {
+        test("returns a comment object", () => {
+            return request(app)
+            .post("/api/reviews/1/comments")
+            .send({ username: "dav3rid", body: "Testing a body" })
+            .expect(201)
+            .then(res => {
+                let comment = res.body.comment
+                expect(typeof(comment)).toBe("object");
+            })
+        })
+        test("returns the posted comment", () => {
+            return request(app)
+            .post("/api/reviews/1/comments")
+            .send({ username: "dav3rid", body: "Testing a body" })
+            .expect(201)
+            .then(res => {
+                let comment = res.body.comment
+                expect(comment[0]).toMatchObject({
+                    comment_id: 7,
+                    body: 'Testing a body',
+                    review_id: 1,
+                    author: 'dav3rid',
+                    votes: 0,
+                    created_at: expect.any(String), //new Date()
+                });
+            })
+        })
+        test("returns a 400 Bad Request status if any query key/parameter is invalid or missing", () => {
+            return request(app)
+            .post("/api/reviews/1/comments")
+            .send({ username: "X" })
+            .expect(400)
+        })
+    })
+})
+
 
