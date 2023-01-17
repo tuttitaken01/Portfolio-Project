@@ -6,7 +6,8 @@ const {
     serverStatus,
     getCategories,
     getReviews,
-    getReviewById
+    getReviewById,
+    getCommentsById
 } = require('./controllers/controllers.js')
 
 const {
@@ -19,6 +20,7 @@ app.get('/api', serverStatus);
 app.get('/api/categories', getCategories);
 app.get('/api/reviews', getReviews);
 app.get('/api/reviews/:id', getReviewById);
+app.get('/api/reviews/:id/comments', getCommentsById)
 
 
 // ERROR HANDLING FUNCTIONS 

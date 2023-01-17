@@ -40,3 +40,13 @@ exports.fetchReview = (id) => {
         return result.rows[0];
     })
 } 
+
+exports.fetchComments = (id) => {
+    return db.query(`SELECT *
+    FROM comments
+    WHERE review_id=$1;`, [id])
+    .then(result => {
+        //console.log(result.rows);
+        return result.rows;
+    })
+}
