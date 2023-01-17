@@ -4,7 +4,8 @@ const {
     fetchReview,
     fetchComments,
     addComment,
-    updateVotes
+    updateVotes,
+    selAllUsers
 } = require("../models.js");
 
 const {
@@ -111,5 +112,12 @@ exports.patchReview = (req, res, next) => {
     })
     .catch(err => {
         next(err);
+    })
+}
+
+exports.getUsers = (req, res, next) => {
+    selAllUsers()
+    .then((users) => {
+        res.status(200).send({ users });
     })
 }

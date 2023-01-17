@@ -353,4 +353,34 @@ describe("6.patchReview", () => {
     })
 })
 
+describe("7.getUsers", () => {
+    describe("GET /api/users", () => {
+        test("returns an array of objects", () => {
+            return request(app)
+            .get("/api/users")
+            .expect(200)
+            .then(res => {
+                let users = res.body.users;
+                expect(Array.isArray(users)).toBe(true);
+                expect(users).toHaveLength(4);
+            })
+        })
+        test("each object has USERNAME, NAME and AVATAR_URL properties", () => {
+            return request(app)
+            .get("/api/users")
+            .expect(200)
+            .then(res => {
+                let users = res.body.users;
+                users.forEach(user => {
+                    expect(user).toMatchObject({
+                        username: expect.any(String),
+                        name: expect.any(String),
+                        avatar_url: expect.any(String),
+                    })
+                })
+            })
+        })
+    })
+})
+
 

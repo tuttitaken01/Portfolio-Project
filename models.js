@@ -93,3 +93,12 @@ exports.updateVotes = (id, votes) => {
         })
     })
 }
+
+exports.selAllUsers = () => {
+    return db.query(`
+    SELECT * 
+    FROM users;`)
+    .then(res => {
+        return res.rows;
+    })
+}
