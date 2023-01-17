@@ -33,11 +33,11 @@ exports.getReviews = (req, res, next) => {
 exports.getReviewById = (req, res, next) => {
     const { id } = req.params;
     return fetchReview(id)
-    .then((review) => {
-        res.status(200).send({ rev: review });
+    .then((reviewData) => {
+        res.status(200).send({ review: reviewData });
     })
     .catch(err => {
-        console.log(err);
+        //console.log(err);
         next(err);
     })
 }
