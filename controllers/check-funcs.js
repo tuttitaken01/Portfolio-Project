@@ -40,6 +40,5 @@ exports.userExists = (username) => {
             return Promise.reject({ status: 400, msg: "Bad Request" });
         }
     })
-
 }
 

@@ -72,3 +72,24 @@ exports.selUsers = (username) => {
         return res.rows;
     })
 }
+
+exports.updateVotes = (id, votes) => {
+    return db.query(`
+    SELECT review_id, votes
+    FROM reviews
+    WHERE review_id=$1;`, [id])
+    .then(res => {
+        return res.rows[0]["votes"];
+    })
+    .then(current => {
+        let newVotes = current + votes;
+        return db.query(`
+        UPDATE reviews
+        SET votes=${newVotes}
+        WHERE review_id=$1
+        RETURNING *;`, [id])
+        .then(result => {
+            return result.rows[0];
+        })
+    })
+}

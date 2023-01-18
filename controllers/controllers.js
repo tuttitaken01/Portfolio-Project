@@ -3,7 +3,8 @@ const {
     selReviews,
     fetchReview,
     fetchComments,
-    addComment
+    addComment,
+    updateVotes
 } = require("../models.js");
 
 const {
@@ -86,4 +87,29 @@ exports.postCommentById = (req, res, next) => {
     } else {
         throw { status: 400, msg: "Bad Request" };
     }
+}
+
+exports.patchReview = (req, res, next) => {
+    const id = req.params.id;
+    const votes = req.body.inc_votes;
+    reviewID(id)
+    .then(idTrue => {
+        let regex = RegExp(/^\W?[0-9]+$/)
+        if (validateKeys(req.body, ["inc_votes"]) === false) {
+            return Promise.reject({ status: 400, msg: "Bad Request" });
+        } else if (idTrue === false) {
+            return Promise.reject({ status: 404, msg: "Not Found" });
+        } else if (regex.test(votes) === false) {
+            return Promise.reject({ status: 400, msg: "Bad Request" });
+        }
+    })
+    .then(() => {
+        return updateVotes(id, votes);
+    })
+    .then((newReview) => {
+        res.status(200).send({ newReview });
+    })
+    .catch(err => {
+        next(err);
+    })
 }

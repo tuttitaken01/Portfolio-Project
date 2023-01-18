@@ -241,7 +241,7 @@ describe("5.postCommentById", () => {
                 expect(res.body.msg).toBe("Bad Request");
             })
         })
-        test("returns a 400 error is user does not exist", () => {
+        test("returns a 400 error if user does not exist", () => {
             return request(app)
             .post("/api/reviews/1/comments")
             .send({ username: "davtrid", body: "Testing body" })
@@ -249,6 +249,106 @@ describe("5.postCommentById", () => {
             .then(res => {
                 expect(res.body.msg).toBe("Bad Request");
             })
+        })
+        test("returns a 400 error if there are more keys than needed", () => {
+            return request(app)
+            .post("/api/reviews/1/comments")
+            .send({ username: "dav3rid", body: "Testing body", mood: "happy" })
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
+    })
+})
+
+describe("6.patchReview", () => {
+    describe("PATCH /api/reviews/:id", () => {
+        test("returns a review object with the correct number of votes (addition)", () => {
+            return request(app)
+            .patch("/api/reviews/1")
+            .send({inc_votes : 3 })
+            .expect(200)
+            .then(res => {
+                let updated = res.body.newReview;
+                expect(updated).toBeInstanceOf(Object);
+                expect(updated).toMatchObject({
+                    review_id: expect.any(Number),
+                    title: expect.any(String),
+                    designer: expect.any(String),
+                    owner: expect.any(String),
+                    review_img_url: expect.any(String),
+                    review_body: expect.any(String),
+                    category: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: 4,
+                })
+            })
+        })
+        test("returns a review object with the correct number of votes (subtraction)", () => {
+            return request(app)
+            .patch("/api/reviews/9")
+            .send({inc_votes : -7 })
+            .expect(200)
+            .then(res => {
+                let updated = res.body.newReview;
+                expect(updated).toBeInstanceOf(Object);
+                expect(updated).toMatchObject({
+                    review_id: expect.any(Number),
+                    title: expect.any(String),
+                    designer: expect.any(String),
+                    owner: expect.any(String),
+                    review_img_url: expect.any(String),
+                    review_body: expect.any(String),
+                    category: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: 3,
+                })
+            })
+        })
+        test("returns a 404 error if reviewId does not exist", () => {
+            return request(app)
+            .patch("/api/reviews/49")
+            .send({inc_votes : -7 })
+            .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })          
+        })
+        test("returns a 400 error if queried with a non valid object - no number", () => {
+            return request(app)
+            .patch("/api/reviews/1")
+            .send({inc_votes : "take" })
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })  
+        })
+        test("returns a 400 error if queried with a non valid object - no value", () => {
+            return request(app)
+            .patch("/api/reviews/1")
+            .send({inc_votes : '' })
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })  
+        })
+        test("returns a 400 error if object includes other non-required keys", () => {
+            return request(app)
+            .patch("/api/reviews/1")
+            .send({inc_votes : "take", downvotes: 5 })
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })  
+        })
+        test("returns a 400 error if nothing is passed in", () => {
+            return request(app)
+            .patch("/api/reviews/1")
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })  
         })
     })
 })
