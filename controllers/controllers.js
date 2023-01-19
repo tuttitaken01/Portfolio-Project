@@ -51,6 +51,7 @@ exports.getReviews = (req, res, next) => {
             "category",
             "created_at",
             "votes",
+            "review_id",
         ];
         if (sortOn !== undefined && acceptedSorts.indexOf(sortOn) == -1) {
             return Promise.reject({ status: 400, msg:  "Bad Request" });
