@@ -506,3 +506,13 @@ describe("8.getReviews using queries", () => {
     })
 })
 
+describe("10.delComment", () => {
+    describe("DELETE /api/comments/commId", () => {
+        test("deletes a comment given an id", () => {
+            return request(app)
+            .delete("/api/comments/3")
+            .expect(204)
+        })
+    })
+})
+

@@ -7,13 +7,15 @@ const {
     updateVotes,
     selAllUsers,
     selUsers,
+    deleteComm,
 } = require("../models.js");
 
 const {
     reviewID,
     validateKeys,
     userExists,
-    catExists
+    catExists,
+    commExists
 } = require("./check-funcs.js")
 
 exports.serverStatus = (req, res) => {
@@ -164,6 +166,26 @@ exports.getUsername = (req, res, next) => {
         } else {
             res.status(200).send({ user });
         }
+    })
+    .catch(err => {
+        next(err);
+    })
+}
+
+exports.delComment = (req, res, next) => {
+    const id = req.params["commId"];
+    commExists(id)
+    .then(exists => {
+        if (exists === false) {
+            return Promise.reject({ status: 404, msg: "Not Found" });
+        }
+    })
+    .then(() => {
+        return deleteComm(id);
+    })
+    .then((deleted) => {
+        console.log(deleted);
+        res.status(204).send();
     })
     .catch(err => {
         next(err);
