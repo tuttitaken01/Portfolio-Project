@@ -41,4 +41,3 @@ exports.userExists = (username) => {
         }
     })
 }
-
