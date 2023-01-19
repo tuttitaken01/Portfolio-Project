@@ -58,7 +58,9 @@ exports.getReviews = (req, res, next) => {
         return selReviews(category, sortOn, order);
     })
     .then((reviews) => {
-        if (reviews.length === 0) {
+        if (catExists && reviews.length === 0) {
+            res.status(200).send({ msg: "204: No Content" }); 
+        } else if (reviews.length === 0) {
             return Promise.reject({ status: 400, msg: "Bad Request" });
         } else {
             res.status(200).send({ reviews });

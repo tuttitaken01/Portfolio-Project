@@ -416,7 +416,7 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('votes', {descending: true});
+                expect(body).toBeSortedBy("votes", {descending: true});
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(13);
             })
@@ -427,7 +427,7 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('votes');
+                expect(body).toBeSortedBy("votes");
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(13);
             })
@@ -438,7 +438,11 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('category', {descending: true});
+                body.forEach(rev => {
+                    expect(rev.hasOwnProperty("category")).toBe(true);
+                    expect(rev.category).toBe("social deduction");
+                })
+                expect(body).toBeSortedBy('created_at', {descending: true})
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(11);
             })
@@ -449,7 +453,7 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('category');
+                expect(body).toBeSortedBy('created_at');
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(1);
             })
@@ -460,9 +464,17 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('votes');
+                expect(body).toBeSortedBy("votes");
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(11);
+            })
+        })
+        test("returns a No Content message when category exists but does not contain reviews", () => {
+            return request(app)
+            .get("/api/reviews?category=children%27s+games")
+            .expect(200)
+            .then(res => {
+                expect(res.body).toEqual({ msg: "204: No Content" })
             })
         })
     })
