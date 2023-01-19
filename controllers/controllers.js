@@ -12,7 +12,8 @@ const {
 const {
     reviewID,
     validateKeys,
-    userExists
+    userExists,
+    catExists
 } = require("./check-funcs.js")
 
 exports.serverStatus = (req, res) => {
@@ -29,10 +30,39 @@ exports.getCategories = (req, res, next) => {
     })
 }
 
+// REFACTORING FOR TASK 8 TRELLO BOARD
 exports.getReviews = (req, res, next) => {
-    selReviews()
+    const { category, sortOn, order } = req.query;
+    catExists(category)
+    .then(() => {
+        if (order !== undefined && order !== "ASC" && order !== "DESC") {
+            return Promise.reject({ status: 400, msg: "Bad Request" });
+        }
+    })
+    .then(() => {
+        const acceptedSorts = [
+            "title",
+            "designer",
+            "owner",
+            "review_img_url",
+            "review_body",
+            "category",
+            "created_at",
+            "votes",
+        ];
+        if (sortOn !== undefined && acceptedSorts.indexOf(sortOn) == -1) {
+            return Promise.reject({ status: 400, msg:  "Bad Request" });
+        }
+    })
+    .then (() => {
+        return selReviews(category, sortOn, order);
+    })
     .then((reviews) => {
-        res.status(200).send({ reviews });
+        if (reviews.length === 0) {
+            return Promise.reject({ status: 400, msg: "Bad Request" });
+        } else {
+            res.status(200).send({ reviews });
+        }
     })
     .catch(err => {
         next(err);

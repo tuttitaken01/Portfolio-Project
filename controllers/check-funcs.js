@@ -41,3 +41,26 @@ exports.userExists = (username) => {
         }
     })
 }
+
+exports.catExists = (category) => {
+    if (category === undefined) {
+        return Promise.resolve();
+    }
+    return db.query(`
+    SELECT *
+    FROM categories WHERE slug=$1`, [category])
+    .then(res => {
+        if (res.rows.length ===0) {
+            return Promise.reject({ status: 404, msg: "Not Found" });
+        } else {
+            return Promise.resolve();
+        }
+    })
+    .catch(err => {
+        if(err.status === 404) {
+            return Promise.reject({ status: 404, msg: "Not Found" });
+        } else {
+            return Promise.reject({ status: 400, msg: "Bad Request" });
+        }
+    })
+}
