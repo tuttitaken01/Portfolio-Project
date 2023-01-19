@@ -381,6 +381,30 @@ describe("7.getUsers", () => {
             })
         })
     })
+    describe("GET /api/users/:username", () => {
+        test("returns a single object", () => {
+            return request(app)
+            .get("/api/users/mallionaire")
+            .expect(200)
+            .then(res => {
+                let user = res.body.user;
+                expect(user).toMatchObject([{
+                    username: 'mallionaire',
+                    name: 'haz',
+                    avatar_url:
+      'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+                }])
+            })
+        })
+        test("returns a 404 error if username isn't found", () => {
+            return request(app)
+            .get("/api/users/tuttitaken01")
+            .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })
+        })
+    })
 })
 
 

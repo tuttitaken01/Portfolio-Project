@@ -5,7 +5,8 @@ const {
     fetchComments,
     addComment,
     updateVotes,
-    selAllUsers
+    selAllUsers,
+    selUsers,
 } = require("../models.js");
 
 const {
@@ -119,5 +120,20 @@ exports.getUsers = (req, res, next) => {
     selAllUsers()
     .then((users) => {
         res.status(200).send({ users });
+    })
+}
+
+exports.getUsername = (req, res, next) => {
+    const username = req.params.username;
+    return selUsers(username)
+    .then((user) => {
+        if(user.length === 0) {
+            return Promise.reject({ status: 404, msg: "Not Found" })
+        } else {
+            res.status(200).send({ user });
+        }
+    })
+    .catch(err => {
+        next(err);
     })
 }

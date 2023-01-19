@@ -10,7 +10,8 @@ const {
     getCommentsById,
     postCommentById,
     patchReview,
-    getUsers
+    getUsers,
+    getUsername
 } = require('./controllers/controllers.js')
 
 const {
@@ -28,6 +29,7 @@ app.get('/api/reviews/:id/comments', getCommentsById);
 app.post('/api/reviews/:id/comments', postCommentById);
 app.patch('/api/reviews/:id', patchReview);
 app.get('/api/users', getUsers);
+app.get('/api/users/:username', getUsername);
 
 
 // ERROR HANDLING FUNCTIONS 
