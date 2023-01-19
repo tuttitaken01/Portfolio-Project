@@ -407,4 +407,90 @@ describe("7.getUsers", () => {
     })
 })
 
+// refer back to line 60 for getting reviews without queries.
+describe("8.getReviews using queries", () => {
+    describe("GET /api/reviews queries", () => {
+        test("returns reviews queried with only a sortOn parameter in default DESC order", () => {
+            return request(app)
+            .get("/api/reviews?sortOn=votes")
+            .expect(200)
+            .then(res => {
+                let body = res.body.reviews;
+                expect(body).toBeSortedBy('votes', {descending: true});
+                expect(Array.isArray(body)).toBe(true);
+                expect(body.length).toBe(13);
+            })
+        })
+        test("returns reviews queried with sortOn and order parameters", () => {
+            return request(app)
+            .get("/api/reviews?sortOn=votes&order=ASC")
+            .expect(200)
+            .then(res => {
+                let body = res.body.reviews;
+                expect(body).toBeSortedBy('votes');
+                expect(Array.isArray(body)).toBe(true);
+                expect(body.length).toBe(13);
+            })
+        })
+        test("returns relevant reviews queried with only a category parameter (default created_at DESC order)", () => {
+            return request(app)
+            .get("/api/reviews?category=social+deduction")
+            .expect(200)
+            .then(res => {
+                let body = res.body.reviews;
+                expect(body).toBeSortedBy('category', {descending: true});
+                expect(Array.isArray(body)).toBe(true);
+                expect(body.length).toBe(11);
+            })
+        })
+        test("returns relevant reviews queried with category and order parameters", () => {
+            return request(app)
+            .get("/api/reviews?category=dexterity&order=ASC")
+            .expect(200)
+            .then(res => {
+                let body = res.body.reviews;
+                expect(body).toBeSortedBy('category');
+                expect(Array.isArray(body)).toBe(true);
+                expect(body.length).toBe(1);
+            })
+        })
+        test("returns relevant reviews queried all parameters", () => {
+            return request(app)
+            .get("/api/reviews?category=social+deduction&sortOn=votes&order=ASC")
+            .expect(200)
+            .then(res => {
+                let body = res.body.reviews;
+                expect(body).toBeSortedBy('votes');
+                expect(Array.isArray(body)).toBe(true);
+                expect(body.length).toBe(11);
+            })
+        })
+    })
+    describe("GET queries ERRORS", () => {
+        test("returns a 404 error if category is not found", () => {
+            return request(app)
+            .get("/api/reviews?category=gaming")
+            .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })
+        })
+        test("returns a 400 error if non accepted sortOn values are given", () => {
+            return request(app)
+            .get("/api/reviews?sortOn=nature")
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
+        test("returns a 400 error if non accepted order values are given", () => {
+            return request(app)
+            .get("/api/reviews?order=travel")
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
+    })
+})
 

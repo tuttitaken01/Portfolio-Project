@@ -9,19 +9,36 @@ exports.selCategories = (req,res) => {
     });
 }
 
-exports.selReviews = () => {
-    return db.query(`
-    SELECT reviews.review_id, reviews.owner, reviews.title, reviews.category, reviews.review_img_url, reviews.created_at, reviews.designer, reviews.votes,
-    COUNT(comment_id) AS comment_count
-    FROM reviews
-    LEFT JOIN comments
-    ON comments.review_id = reviews.review_id
-    GROUP BY reviews.review_id
-    ORDER BY created_at DESC;`)
-    .then(result => {
-        return result.rows;
-    })
+exports.selReviews = (category = undefined, sortOn = 'created_at', order = 'DESC') => {
+    if (category !== undefined) {
+        return db.query(`
+        SELECT reviews.review_id, reviews.owner, reviews.title, reviews.category, reviews.review_img_url, reviews.created_at, reviews.designer, reviews.votes,
+        COUNT(comment_id) AS comment_count
+        FROM reviews
+        LEFT JOIN comments
+        ON comments.review_id = reviews.review_id
+        WHERE category=$1
+        GROUP BY reviews.review_id
+        ORDER BY ${sortOn} ${order};`, [category])
+        .then(result => {
+            return result.rows;
+        })
+    } else if (category === undefined) {
+        return db.query(`
+        SELECT reviews.review_id, reviews.owner, reviews.title, reviews.category, reviews.review_img_url, reviews.created_at, reviews.designer, reviews.votes,
+        COUNT(comment_id) AS comment_count
+        FROM reviews
+        LEFT JOIN comments
+        ON comments.review_id = reviews.review_id
+        GROUP BY reviews.review_id
+        ORDER BY ${sortOn} ${order};`)
+        .then(result => {
+            return result.rows;
+        })
+    }
 }
+    
+    
 
 exports.fetchReview = (id) => {
     return db.query(`
