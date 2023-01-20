@@ -1,7 +1,9 @@
 const db = require('../db/connection.js');
 const { selUsers } = require('../models.js');
+
+
 exports.reviewID = (id) => {
-    regex = RegExp(/^\W?[0-9]+$/);
+    let regex = RegExp(/^\W?[0-9]+$/);
     if(regex.test(id) === false) {
         return Promise.reject({ status: 400, msg: "Bad Request"});
     }
@@ -62,5 +64,26 @@ exports.catExists = (category) => {
         } else {
             return Promise.reject({ status: 400, msg: "Bad Request" });
         }
+    })
+}
+
+exports.commExists = (comment) => {
+    let regex = RegExp(/^\W?[0-9]+$/);
+    if(regex.test(comment) === false) {
+        return Promise.reject({ status: 400, msg: "Bad Request"});
+    }
+    return db.query(`
+    SELECT *
+    FROM comments
+    WHERE comment_id=${comment};`)
+    .then(({ rows }) => {
+        if (rows.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    })
+    .catch(() => {
+        return false;
     })
 }

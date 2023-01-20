@@ -416,7 +416,7 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('votes', {descending: true});
+                expect(body).toBeSortedBy("votes", {descending: true});
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(13);
             })
@@ -427,7 +427,7 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('votes');
+                expect(body).toBeSortedBy("votes");
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(13);
             })
@@ -438,7 +438,11 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('category', {descending: true});
+                body.forEach(rev => {
+                    expect(rev.hasOwnProperty("category")).toBe(true);
+                    expect(rev.category).toBe("social deduction");
+                })
+                expect(body).toBeSortedBy('created_at', {descending: true})
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(11);
             })
@@ -449,7 +453,7 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('category');
+                expect(body).toBeSortedBy('created_at');
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(1);
             })
@@ -460,9 +464,17 @@ describe("8.getReviews using queries", () => {
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
-                expect(body).toBeSortedBy('votes');
+                expect(body).toBeSortedBy("votes");
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(11);
+            })
+        })
+        test("returns a No Content message when category exists but does not contain reviews", () => {
+            return request(app)
+            .get("/api/reviews?category=children%27s+games")
+            .expect(200)
+            .then(res => {
+                expect(res.body).toEqual({ msg: "204: No Content" })
             })
         })
     })
@@ -486,6 +498,32 @@ describe("8.getReviews using queries", () => {
         test("returns a 400 error if non accepted order values are given", () => {
             return request(app)
             .get("/api/reviews?order=travel")
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
+    })
+})
+
+describe("10.delComment", () => {
+    describe("DELETE /api/comments/commId", () => {
+        test("deletes a comment given an id", () => {
+            return request(app)
+            .delete("/api/comments/3")
+            .expect(204)
+        })
+        test("returns a 404 error if comment is not found", () => {
+            return request(app)
+            .delete("/api/comments/73")
+            .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })
+        })
+        test("returns a 400 error if comment is in wrong format", () => {
+            return request(app)
+            .delete("/api/comments/abre")
             .expect(400)
             .then(res => {
                 expect(res.body.msg).toBe("Bad Request");

@@ -11,7 +11,8 @@ const {
     postCommentById,
     patchReview,
     getUsers,
-    getUsername
+    getUsername,
+    delComment
 } = require('./controllers/controllers.js')
 
 const {
@@ -30,7 +31,7 @@ app.post('/api/reviews/:id/comments', postCommentById);
 app.patch('/api/reviews/:id', patchReview);
 app.get('/api/users', getUsers);
 app.get('/api/users/:username', getUsername);
-
+app.delete('/api/comments/:commId', delComment)
 
 // ERROR HANDLING FUNCTIONS 
 app.use(standardErrorHandler);
