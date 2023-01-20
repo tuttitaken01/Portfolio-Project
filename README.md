@@ -36,3 +36,7 @@ In order to run tests, run
 ```
 npm test app.test.js
 ```
+
+## Version Requirements
+NodeJS: v.19.1.0
+Postgres: v.12.12
