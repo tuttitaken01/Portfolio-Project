@@ -1,3 +1,4 @@
+const { commExists } = require("./controllers/check-funcs.js");
 const db = require("./db/connection.js")
 
 exports.selCategories = (req,res) => {
@@ -121,10 +122,18 @@ exports.selAllUsers = () => {
 }
 
 exports.deleteComm = (id) => {
-    return db.query(`
-    DELETE FROM comments
-    WHERE comment_id=$1
-    RETURNING *;`, [id])
+    return commExists(id)
+    .then(exists => {
+        if (exists === false) {
+            return Promise.reject({ status: 404, msg: "Not Found" });
+        }
+    })
+    .then(() => {
+        return db.query(`
+        DELETE FROM comments
+        WHERE comment_id=$1
+        RETURNING *;`, [id])
+    })
     .then(res => {
         return res.rows[0];
     })

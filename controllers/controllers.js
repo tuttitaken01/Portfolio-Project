@@ -15,8 +15,7 @@ const {
     reviewID,
     validateKeys,
     userExists,
-    catExists,
-    commExists
+    catExists
 } = require("./check-funcs.js")
 
 exports.serverStatus = (req, res) => {
@@ -176,17 +175,8 @@ exports.getUsername = (req, res, next) => {
 
 exports.delComment = (req, res, next) => {
     const id = req.params["commId"];
-    commExists(id)
-    .then(exists => {
-        if (exists === false) {
-            return Promise.reject({ status: 404, msg: "Not Found" });
-        }
-    })
+    return deleteComm(id)
     .then(() => {
-        return deleteComm(id);
-    })
-    .then((deleted) => {
-        console.log(deleted);
         res.status(204).send();
     })
     .catch(err => {
