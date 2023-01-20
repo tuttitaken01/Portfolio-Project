@@ -129,3 +129,12 @@ exports.deleteComm = (id) => {
         return res.rows[0];
     })
 }
+
+exports.fetchAllComments = () => {
+    return db.query(`
+    SELECT *
+    FROM comments;`)
+    .then(res => {
+        return res.rows;
+    })
+}

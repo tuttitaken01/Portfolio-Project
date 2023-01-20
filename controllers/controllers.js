@@ -8,6 +8,7 @@ const {
     selAllUsers,
     selUsers,
     deleteComm,
+    fetchAllComments,
 } = require("../models.js");
 
 const {
@@ -190,5 +191,12 @@ exports.delComment = (req, res, next) => {
     })
     .catch(err => {
         next(err);
+    })
+}
+
+exports.getComments = (req, res, next) => {
+    return fetchAllComments()
+    .then((comments) => {
+        res.status(200).send({ comments });
     })
 }
