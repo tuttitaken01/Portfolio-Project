@@ -521,6 +521,14 @@ describe("10.delComment", () => {
                 expect(res.body.msg).toBe("Not Found");
             })
         })
+        test("returns a 400 error if comment is in wrong format", () => {
+            return request(app)
+            .delete("/api/comments/abre")
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Bad Request");
+            })
+        })
     })
 })
 
