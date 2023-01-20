@@ -532,3 +532,18 @@ describe("10.delComment", () => {
     })
 })
 
+describe("EXTRA-getComments", () => {
+    describe("GET /api/comments", () => {
+        test("returns an array of all comments", () => {
+            return request(app)
+            .get("/api/comments")
+            .expect(200)
+            .then(res => {
+                let comments = res.body.comments;
+                expect(Array.isArray(comments)).toBe(true);
+                expect(comments).toHaveLength(6)
+            });
+        });
+    });
+})
+
