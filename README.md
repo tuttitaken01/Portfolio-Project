@@ -12,10 +12,10 @@ To interact with the API, the user can implement HTTP requests in the browser or
 
 ## Repository Instructions
 
-- [ ] Obtain the GitHub repo code link. :compass:
-- [ ] Open terminal and navigate to desired directory.
-- [ ] Run the `git clone` command and paste the link obtained previously.
-- [ ] In the cloned repo, run `npm i` to install all required dependencies.
+- [ ] 🧭: Obtain the GitHub repo code link.
+- [ ] 💻: Open terminal and navigate to desired directory.
+- [ ] 📌: Run the `git clone` command and paste the link obtained previously.
+- [ ] 🔌: In the cloned repo, run `npm i` to install all required dependencies.
 
 ## Notes
 In order to successfully connect to the two databases and run the project locally, the developer will need to create an _.env.development_ and an _.env.test_ file and write a line referring to the database e.g. 
