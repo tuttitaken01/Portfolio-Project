@@ -12,7 +12,7 @@ To interact with the API, the user can implement HTTP requests in the browser or
 
 ## Repository Instructions
 
-- [ ] Obtain the GitHub repo code link.
+- [ ] Obtain the GitHub repo code link. :compass:
 - [ ] Open terminal and navigate to desired directory.
 - [ ] Run the `git clone` command and paste the link obtained previously.
 - [ ] In the cloned repo, run `npm i` to install all required dependencies.
