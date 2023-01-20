@@ -513,6 +513,14 @@ describe("10.delComment", () => {
             .delete("/api/comments/3")
             .expect(204)
         })
+        test("returns a 404 error if comment is not found", () => {
+            return request(app)
+            .delete("/api/comments/73")
+            .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Not Found");
+            })
+        })
     })
 })
 
