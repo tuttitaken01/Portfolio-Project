@@ -10,29 +10,29 @@ exports.selCategories = (req,res) => {
     });
 }
 
-exports.selReviews = (category = undefined, sortOn = 'created_at', order = 'DESC') => {
+exports.selReviews = (category = undefined, sortBy = 'created_at', order = 'DESC') => {
     if (category !== undefined) {
         return db.query(`
         SELECT reviews.review_id, reviews.owner, reviews.title, reviews.category, reviews.review_img_url, reviews.created_at, reviews.designer, reviews.votes,
-        COUNT(comment_id) AS comment_count
+        COUNT(comments.comment_id) :: INT AS comment_count
         FROM reviews
         LEFT JOIN comments
-        ON comments.review_id = reviews.review_id
+        ON reviews.review_id = comments.review_id
         WHERE category=$1
         GROUP BY reviews.review_id
-        ORDER BY ${sortOn} ${order};`, [category])
+        ORDER BY ${sortBy} ${order};`, [category])
         .then(result => {
             return result.rows;
         })
     } else if (category === undefined) {
         return db.query(`
         SELECT reviews.review_id, reviews.owner, reviews.title, reviews.category, reviews.review_img_url, reviews.created_at, reviews.designer, reviews.votes,
-        COUNT(comment_id) AS comment_count
+        COUNT(comments.comment_id) :: INT AS comment_count
         FROM reviews
         LEFT JOIN comments
-        ON comments.review_id = reviews.review_id
+        ON reviews.review_id = comments.review_id
         GROUP BY reviews.review_id
-        ORDER BY ${sortOn} ${order};`)
+        ORDER BY ${sortBy} ${order};`)
         .then(result => {
             return result.rows;
         })
@@ -43,10 +43,10 @@ exports.selReviews = (category = undefined, sortOn = 'created_at', order = 'DESC
 
 exports.fetchReview = (id) => {
     return db.query(`
-    SELECT reviews.*, COUNT(comment_id) AS comment_count
+    SELECT reviews.*, COUNT(comments.comment_id) :: INT AS comment_count
     FROM reviews
     LEFT JOIN comments
-    ON comments.review_id = reviews.review_id
+    ON reviews.review_id = comments.review_id
     WHERE reviews.review_id=$1
     GROUP BY reviews.review_id;`, [id])
     .then(result => {

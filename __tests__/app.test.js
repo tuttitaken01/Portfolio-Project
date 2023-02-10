@@ -122,7 +122,8 @@ describe("3.getReviewById", () => {
                     review_body: "We couldn't find the werewolf!",
                     category: 'social deduction',
                     created_at: "2021-01-18T09:01:41.251Z",
-                    votes: 5
+                    votes: 5,
+                    comment_count: 3,
                   })
             })
         })
@@ -410,9 +411,9 @@ describe("7.getUsers", () => {
 // refer back to line 60 for getting reviews without queries.
 describe("8.getReviews using queries", () => {
     describe("GET /api/reviews queries", () => {
-        test("returns reviews queried with only a sortOn parameter in default DESC order", () => {
+        test("returns reviews queried with only a sortBy parameter in default DESC order", () => {
             return request(app)
-            .get("/api/reviews?sortOn=votes")
+            .get("/api/reviews?sortBy=votes")
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
@@ -421,13 +422,24 @@ describe("8.getReviews using queries", () => {
                 expect(body.length).toBe(13);
             })
         })
-        test("returns reviews queried with sortOn and order parameters", () => {
+        test("returns reviews queried with sortBy and order parameters", () => {
             return request(app)
-            .get("/api/reviews?sortOn=votes&order=ASC")
+            .get("/api/reviews?sortBy=votes&order=ASC")
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
                 expect(body).toBeSortedBy("votes");
+                expect(Array.isArray(body)).toBe(true);
+                expect(body.length).toBe(13);
+            })
+        })
+        test("NEW TEST - returns reviews queried with sortBy and order parameters", () => {
+            return request(app)
+            .get("/api/reviews?sortBy=comment_count&order=ASC")
+            .expect(200)
+            .then(res => {
+                let body = res.body.reviews;
+                expect(body).toBeSortedBy("comment_count");
                 expect(Array.isArray(body)).toBe(true);
                 expect(body.length).toBe(13);
             })
@@ -460,7 +472,7 @@ describe("8.getReviews using queries", () => {
         })
         test("returns relevant reviews queried all parameters", () => {
             return request(app)
-            .get("/api/reviews?category=social+deduction&sortOn=votes&order=ASC")
+            .get("/api/reviews?category=social+deduction&sortBy=votes&order=ASC")
             .expect(200)
             .then(res => {
                 let body = res.body.reviews;
@@ -487,9 +499,9 @@ describe("8.getReviews using queries", () => {
                 expect(res.body.msg).toBe("Not Found");
             })
         })
-        test("returns a 400 error if non accepted sortOn values are given", () => {
+        test("returns a 400 error if non accepted sortBy values are given", () => {
             return request(app)
-            .get("/api/reviews?sortOn=nature")
+            .get("/api/reviews?sortBy=nature")
             .expect(400)
             .then(res => {
                 expect(res.body.msg).toBe("Bad Request");

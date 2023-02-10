@@ -34,7 +34,7 @@ exports.getCategories = (req, res, next) => {
 
 // REFACTORING FOR TASK 8 TRELLO BOARD
 exports.getReviews = (req, res, next) => {
-    const { category, sortOn, order } = req.query;
+    const { category, sortBy, order } = req.query;
     catExists(category)
     .then(() => {
         if (order !== undefined && order !== "ASC" && order !== "DESC") {
@@ -52,13 +52,14 @@ exports.getReviews = (req, res, next) => {
             "created_at",
             "votes",
             "review_id",
+            "comment_count"
         ];
-        if (sortOn !== undefined && acceptedSorts.indexOf(sortOn) == -1) {
+        if (sortBy !== undefined && acceptedSorts.indexOf(sortBy) == -1) {
             return Promise.reject({ status: 400, msg:  "Bad Request" });
         }
     })
     .then (() => {
-        return selReviews(category, sortOn, order);
+        return selReviews(category, sortBy, order);
     })
     .then((reviews) => {
         if (catExists && reviews.length === 0) {
