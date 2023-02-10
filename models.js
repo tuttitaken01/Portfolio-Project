@@ -14,7 +14,7 @@ exports.selReviews = (category = undefined, sortOn = 'created_at', order = 'DESC
     if (category !== undefined) {
         return db.query(`
         SELECT reviews.review_id, reviews.owner, reviews.title, reviews.category, reviews.review_img_url, reviews.created_at, reviews.designer, reviews.votes,
-        COUNT(comment_id) AS comment_count
+        COUNT(reviews.review_id) AS comment_count
         FROM reviews
         LEFT JOIN comments
         ON comments.review_id = reviews.review_id
@@ -27,7 +27,7 @@ exports.selReviews = (category = undefined, sortOn = 'created_at', order = 'DESC
     } else if (category === undefined) {
         return db.query(`
         SELECT reviews.review_id, reviews.owner, reviews.title, reviews.category, reviews.review_img_url, reviews.created_at, reviews.designer, reviews.votes,
-        COUNT(comment_id) AS comment_count
+        COUNT(reviews.review_id) AS comment_count
         FROM reviews
         LEFT JOIN comments
         ON comments.review_id = reviews.review_id
@@ -43,7 +43,7 @@ exports.selReviews = (category = undefined, sortOn = 'created_at', order = 'DESC
 
 exports.fetchReview = (id) => {
     return db.query(`
-    SELECT reviews.*, COUNT(comment_id) AS comment_count
+    SELECT reviews.*, COUNT(reviews.review_id) AS comment_count
     FROM reviews
     LEFT JOIN comments
     ON comments.review_id = reviews.review_id
